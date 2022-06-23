@@ -186,6 +186,7 @@ let openingMusic, gamePlayMusic, endingMusic, gameOverSE, fiftyEightSecondsSE;
 let fade, fadeAmount;
 
 let gameOverIdx;
+let fiftyEightIdx;
 
 // 모든 Page 설정 및 게임 내 사용되는 모든 Asset 불러오기
 function preload() {
@@ -673,7 +674,7 @@ function setup() {
   // Page 28: easterEgg Page
   Pages.push(new Page("easterEggBG", easterEggBG, null));
 
-  // 시작 단계를 0으로 초기화 (지금은 편의를 위해 3으로 설정)
+  // 시작 단계를 0으로 초기화
   stage = 0;
 
   // 이미지 배치 시 주어진 좌표를 이미지의 중심으로 하여 출력
@@ -700,13 +701,15 @@ function setup() {
   fadeAmount = -0.5;
 
   // 음악 볼륨 설정
-  openingMusic.setVolume(0.5);
-  gamePlayMusic.setVolume(0.5);
-  endingMusic.setVolume(0.5);
-  gameOverSE.setVolume(0.5);
+  openingMusic.setVolume(1);
+  gamePlayMusic.setVolume(1);
+  endingMusic.setVolume(1.5);
+  gameOverSE.setVolume(1);
 
   // 게임 오버 index
   gameOverIdx = 0;
+  // 58초 효과음 index
+  fiftyEightIdx = 0;
 }
 
 function draw() {
@@ -729,8 +732,6 @@ function draw() {
     stage = 21;
   }
 
-  // 58초 효과음 index
-  let fiftyEightIdx = 0;
   // 게임 오버 효과음(리들러의 조롱) 재생
   if(!fiftyEightSecondsSE.isPlaying() && fiftyEightIdx == 0 && timer == 58){
     fiftyEightSecondsSE.play();
@@ -834,11 +835,7 @@ function draw() {
           startBtnY + startBtn1.height / 2,
           startBtnY - startBtn1.height / 2
           )) {
-        //이전 이미지 지우기
-        clear();
-
-        // 새로운 이미지로 덮기
-        Pages[stage].show();
+        // 두번째 버튼 이미지로 변경
         image(startBtn2, startBtnX, startBtnY);
 
         // 마우스 포인터를 클릭하지 않은 경우 (매개변수: 클릭 여부)
@@ -3475,6 +3472,9 @@ function mouseClicked(){
 
         // 시작 stage로
         stage = 0;
+
+        // timer 재설정 (왜냐면 지금 종료조건으로 timer가 500으로 초기화하기 전에 stage가 21에 계속 머물러서)
+        timer = 500;
       }
       else {
         // 마우스 포인터를 클릭한 경우 (매개변수: 클릭 여부)
